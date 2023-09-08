@@ -1,23 +1,35 @@
+from typing import Dict, Any
+
 from import_this import RACE_DATA
 
-sorted_results = sorted(RACE_DATA.items(), key=lambda x: x[1]['FinishedPlace'])
+def format_time(seconds: float) -> str:
+    hours = int(seconds // 3600)
+    minutes = int((seconds % 3600) // 60)
+    seconds = int(seconds % 60)
+    return f"{hours:02}:{minutes:02}:{seconds:02}"
 
-print("Выиграл -", sorted_results[0][1]['RacerName'].upper() + "!!! Поздравляем!!")
-print("_______________________________")
-print("\nПервые три места:\n")
+def print_winner_and_top_three(data: Dict[str, Dict[str, Any]]) -> None:
+    SORTED_RESULTS = sorted(data.items(), key=lambda x: x[1]['FinishedPlace'])
 
-for i in range(3):
-    place = sorted_results[i][1]['FinishedPlace']
-    name = sorted_results[i][1]['RacerName']
-    team = sorted_results[i][1]['RacerTeam']
-    time = sorted_results[i][1]['FinishedTimeSeconds']
+    WINNER_NAME = SORTED_RESULTS[0][1]['RacerName'].upper()
+    WINNER_MESSAGE = f"Выиграл - {WINNER_NAME}!!! Поздравляем!!"
+    print(WINNER_MESSAGE)
+    print("_" * len(WINNER_MESSAGE))
 
-    hours = int(time // 3600)
-    minutes = int((time % 3600) // 60)
-    seconds = int(time % 60)
-    formatted_time = f"{hours:02}:{minutes:02}:{seconds:02}"
+    print("\nПервые три места:\n")
+    for i in range(3):
+        RACER_DATA = SORTED_RESULTS[i][1]
+        PLACE = RACER_DATA['FinishedPlace']
+        NAME = RACER_DATA['RacerName']
+        TEAM = RACER_DATA['RacerTeam']
+        TIME = RACER_DATA['FinishedTimeSeconds']
 
-    print(f"Гонщик на {place} месте:")
-    print(f"    Имя: {name}")
-    print(f"    Команда: {team}")
-    print(f"    Время: {formatted_time} \n")
+        FORMATTED_TIME = format_time(TIME)
+
+        print(f"Гонщик на {PLACE} месте:")
+        print(f"    Имя: {NAME}")
+        print(f"    Команда: {TEAM}")
+        print(f"    Время: {FORMATTED_TIME} \n")
+
+if __name__ == "__main__":
+    print_winner_and_top_three(RACE_DATA)
